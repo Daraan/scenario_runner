@@ -15,3 +15,5 @@ results*.txt
 *.png
 *.svg
 *.dot
+
+antlr-4.10.1-complete.jar
