@@ -759,7 +759,7 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
             if actor is None:
                 continue
             CarlaDataProvider._carla_actor_pool[actor.id] = actor
-            CarlaDataProvider.register_actor(actor, command.transform) #TODO test
+            CarlaDataProvider.register_actor(actor, command.transform)
 
         return actors
 
