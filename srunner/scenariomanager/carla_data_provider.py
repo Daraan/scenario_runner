@@ -268,7 +268,7 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
     @staticmethod
     def is_sync_mode():
         """
-        @return true if syncronuous mode is used
+        @return true if synchronous mode is used
         """
         return CarlaDataProvider._sync_flag
 

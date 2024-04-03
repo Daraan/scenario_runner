@@ -150,7 +150,7 @@ class ScenarioManager(object):
     def _tick_scenario(self, timestamp):
         """
         Run next tick of scenario and the agent.
-        If running synchornously, it also handles the ticking of the world.
+        If running synchronously, it also handles the ticking of the world.
         """
 
         if self._timestamp_last_run < timestamp.elapsed_seconds and self._running:
@@ -188,7 +188,7 @@ class ScenarioManager(object):
     def get_running_status(self):
         """
         returns:
-           bool:  False if watchdog exception occured, True otherwise
+           bool:  False if watchdog exception occurred, True otherwise
         """
         return self._watchdog.get_status()
 
