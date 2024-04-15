@@ -12,7 +12,6 @@
 * [CARLA ScenarioRunner 0.9.5](#carla-scenariorunner-095)
 * [CARLA ScenarioRunner 0.9.2](#carla-scenariorunner-092)
 
-## Latest changes
 ### :rocket: New Features
 
 * New scenarios:
@@ -58,6 +57,7 @@
     - Added `set_runtime_init_mode` and `is_runtime_init_mode`, used by the Leaderboard to initialize scenarios during the simulation
     - At the `create_blueprint` function, replaced the `safe` argument with the `attribute_filter`, for a more generic parsing of any of the blueprint attributes.
     - Removed the `CarlaDataProvider.get_ego_vehicle_route()` and `CarlaDataProvider.set_ego_vehicle_route()` functions as this is now information available to all scenarios.
+    - Added `spawn_actor` for a blueprint based actor creation similar to `World.spawn_actor`
 * Improvements to the routes:
     - Scenarios are no longer position based, but instead part of a route's xml.
     - Routes now also include the criteria of its scenarios.
