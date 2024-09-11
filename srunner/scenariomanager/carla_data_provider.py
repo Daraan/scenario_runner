@@ -10,7 +10,7 @@ This module provides all frequently used data from CARLA via
 local buffers to avoid blocking calls to CARLA
 """
 
-from __future__ import print_function
+from __future__ import print_function, annotations
 
 import math
 import re
@@ -21,6 +21,7 @@ from six import iteritems
 import carla
 from agents.navigation.global_route_planner import GlobalRoutePlanner
 
+from typing import Optional
 
 def calculate_velocity(actor):
     """
@@ -162,7 +163,8 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
             CarlaDataProvider._all_actors = None
 
     @staticmethod
-    def get_velocity(actor):
+    def get_velocity(actor: carla.Actor) -> float:
+        # type: (carla.Actor) -> float
         """
         returns the absolute velocity for the given actor
         """
@@ -179,7 +181,7 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
         return 0.0
 
     @staticmethod
-    def get_location(actor):
+    def get_location(actor: carla.Actor) -> carla.Location:
         """
         returns the location for the given actor
         """
@@ -195,7 +197,7 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
         return None
 
     @staticmethod
-    def get_transform(actor):
+    def get_transform(actor: carla.Actor) -> carla.Transform | None:
         # type: (carla.Actor) -> carla.Transform | None
         """
         returns the transform for the given actor
@@ -224,7 +226,7 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
         CarlaDataProvider._client = client
 
     @staticmethod
-    def get_client():
+    def get_client() -> carla.Client:
         """
         Get the CARLA client
         """
@@ -245,14 +247,14 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
         CarlaDataProvider.prepare_map()
 
     @staticmethod
-    def get_world():
+    def get_world() -> carla.World:
         """
         Return world
         """
         return CarlaDataProvider._world
 
     @staticmethod
-    def get_map(world=None):
+    def get_map(world: carla.World | None=None) -> carla.Map:
         # type: (carla.World | None) -> carla.Map
         """
         Get the current map
@@ -269,15 +271,15 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
         return CarlaDataProvider._map
 
     @staticmethod
-    def get_random_seed():
+    def get_random_seed() -> random.RandomState:
         """
         @return the random seed.
         """
         return CarlaDataProvider._rng
 
     @staticmethod
-    def get_global_route_planner():
-        """
+    def get_global_route_planner() -> GlobalRoutePlanner:
+        """        
         @return the global route planner
         """
         return CarlaDataProvider._grp
@@ -304,7 +306,7 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
         return CarlaDataProvider._ego_vehicle_route
 
     @staticmethod
-    def get_all_actors():
+    def get_all_actors() -> carla.ActorList:
         """
         @return all the world actors. This is an expensive call, hence why it is part of the CDP,
         but as this might not be used by everyone, only get the actors the first time someone
@@ -317,7 +319,7 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
         return CarlaDataProvider._all_actors
 
     @staticmethod
-    def is_sync_mode():
+    def is_sync_mode() -> bool:
         """
         @return true if syncronuous mode is used
         """
@@ -406,7 +408,7 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
         return dict_annotations
 
     @staticmethod
-    def get_trafficlight_trigger_location(traffic_light):    # pylint: disable=invalid-name
+    def get_trafficlight_trigger_location(traffic_light: carla.TrafficLight) -> carla.Location:    # pylint: disable=invalid-name
         """
         Calculates the yaw of the waypoint that represents the trigger volume of the traffic light
         """
@@ -475,6 +477,7 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
 
     @staticmethod
     def get_next_traffic_light(actor, use_cached_location=True):
+        # type: (carla.Actor, bool) -> carla.TrafficLight | None
         """
         returns the next relevant traffic light for the provided actor
         """
@@ -726,7 +729,12 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
         return actors
 
     @staticmethod
-    def spawn_actor(bp, spawn_point, must_spawn=False, track_physics=None, attach_to=None, attachment_type=carla.AttachmentType.Rigid):
+    def spawn_actor(bp: carla.ActorBlueprint, 
+                    spawn_point: carla.Waypoint | carla.Transform, 
+                    must_spawn: bool = False, 
+                    track_physics: Optional[bool] = None, 
+                    attach_to: Optional[carla.Actor] = None, 
+                    attachment_type: carla.AttachmentType = carla.AttachmentType.Rigid) -> carla.Actor | None:
         # type: (carla.ActorBlueprint, carla.Waypoint | carla.Transform, bool, bool | None, carla.Actor | None, carla.AttachmentType) -> carla.Actor | None # pylint: disable=line-too-long
         """
         The method will spawn and return an actor.
@@ -981,13 +989,10 @@ class CarlaDataProvider(object):  # pylint: disable=too-many-public-methods
         """
         Check if a certain id is still at the simulation
         """
-        if actor_id in CarlaDataProvider._carla_actor_pool:
-            return True
-
-        return False
-
+        return actor_id in CarlaDataProvider._carla_actor_pool
+  
     @staticmethod
-    def get_hero_actor():
+    def get_hero_actor() -> carla.Actor | None:
         """
         Get the actor object of the hero actor if it exists, returns none otherwise.
         """
